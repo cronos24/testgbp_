@@ -1,6 +1,7 @@
 const path = require('path')
 const fs = require('fs-extra')
 const mix = require('laravel-mix')
+const webpack = require('webpack')
 require('laravel-mix-versionhash')
 // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
@@ -21,7 +22,10 @@ if (mix.inProduction()) {
 
 mix.webpackConfig({
   plugins: [
-    // new BundleAnalyzerPlugin()
+      new webpack.ProvidePlugin({
+              '$': 'jquery',
+              jQuery: 'jquery',
+          }),
   ],
   resolve: {
     extensions: ['.js', '.json', '.vue'],
@@ -51,3 +55,8 @@ function publishAseets () {
   fs.copySync(path.join(publicDir, 'build', 'dist'), path.join(publicDir, 'dist'))
   fs.removeSync(path.join(publicDir, 'build'))
 }
+mix.browserSync({
+    open: false,
+    proxy: 'http://prueba.localhost',
+    files: ['public/dist/js/*.js', 'public/dist/css/*.css']
+})
