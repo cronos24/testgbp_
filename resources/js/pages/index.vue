@@ -29,7 +29,7 @@
                     <div class="row mx-0 my-3">
                         <p class="mx-2 my-auto"> Bodega 1 </p>
                         <el-tooltip class="item" effect="light" content="Roberto Gómez Bolaños" placement="top">
-                            <img class="rounded-circle mx-2 obj-cover" height="40" width="40" src="https://www.economist.com/sites/default/files/images/print-edition/20200208_LDD001_0.jpg" alt="" />
+                            <img class="rounded-circle mx-2 obj-cover" height="40" width="40" src="/img/usuarios/anni.jpg" alt="" />
                         </el-tooltip>
                         <button type="button" :class="`btn btn-sm my-auto ${respBodega?'btn-success':'btn-danger'}`" name="button" @click="cambiarEstadoUsuario" >
                             {{respBodega?'Activo':'Inactivo'}}

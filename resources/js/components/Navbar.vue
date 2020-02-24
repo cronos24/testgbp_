@@ -23,7 +23,7 @@
             <a class="nav-link dropdown-toggle text-dark"
                href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
             >
-              <img :src="user.photo_url" class="rounded-circle profile-photo mr-1">
+              <img :src="user.foto" class="rounded-circle profile-photo mr-1" style="object-fit:cover">
               {{ user.name }}
             </a>
             <div class="dropdown-menu">
