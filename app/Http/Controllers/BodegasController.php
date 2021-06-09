@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Bodega;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 
-class UsersController extends Controller
+class BodegasController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,8 +17,8 @@ class UsersController extends Controller
     public function index()
     {       
 
-        $users = User::all()->sortBy("nombre");      
-        return response()->json($users);
+        $bodegas = Bodega::with('user')->orderBy('created_at', 'asc')->get();         
+        return response()->json($bodegas);
         
     }
     /**
@@ -30,19 +30,18 @@ class UsersController extends Controller
     public function store(Request $request)
     {
 
+        //dd($request->all());
          $rules=[
             'nombre' => 'required',
-            'foto' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048'
+            'id_responsable' => 'required'
             ];
         $messages=[
             'required' => 'El campo <strong> ":attribute" </strong> es obligatorio.',
             ];
         $attributes=[
             'nombre'=>'Nombre',
-            'foto' => 'Foto'
+            'id_responsable' => 'Responsable'
             ];
-
-
 
         $validator=Validator::make($request->all(),$rules,$messages,$attributes);    
 
@@ -54,30 +53,21 @@ class UsersController extends Controller
 
             try {
 
-                $file_name= null;
-
-                if ($request->foto!= null && $request->foto!= '') {
-                    $file_name = time().'_'.$request->foto->getClientOriginalName(); 
-                }
-
-          
-                $users = new User([
+                       
+                $Bodegas = new Bodega([
                     'nombre' => $request->nombre,
-                    'foto' => $file_name,
+                    'id_responsable' => $request->id_responsable,
                     'estado' => 1
                 ]);
 
-                if ($users->save()) {
-                    if ($request->foto!= null && $request->foto!= '') {
-                        $request->file('foto')->storeAs('uploads/users/foto', $file_name, 'public');
-                    }
-                    
+                if ($Bodegas->save()) {                    
                     $response['status'] = 'success';
                 }else{
                     $response['status'] = 'fail';
                 }
 
-                $response['response'] = $users;
+
+                $response['response'] = Bodega::with('user')->where('id',$Bodegas->id)->first();
                 
                 
             } catch (\Throwable $th) {
@@ -99,41 +89,41 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Users  $users
+     * @param  \App\Models\Bodegas  $Bodegas
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $users = User::find($id);
-        return response()->json($users);
+        $Bodegas = Bodega::find($id);
+        return response()->json($Bodegas);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Users  $users
+     * @param  \App\Models\Bodegas  $Bodegas
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        $users = User::find($id);
-        $users->update($request->all());
+        $Bodegas = Bodega::find($id);
+        $Bodegas->update($request->all());
 
-        return response()->json($users);
+        return response()->json($Bodegas);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Users  $users
+     * @param  \App\Models\Bodegas  $Bodegas
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $users = User::find($id);
-        $users->delete();
+        $Bodegas = Bodega::find($id);
+        $Bodegas->delete();
 
-        return response()->json('User deleted!');
+        return response()->json('Bodega deleted!');
     }
 }

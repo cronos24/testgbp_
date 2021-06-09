@@ -18,13 +18,10 @@
                 <div class="form-group col-md-12">
                     <label>Nombre</label>
                     <input type="text" class="form-control" name="nombre" v-model="model.nombre" required>
-                    <div class="invalid-feedback">
-                    "Nombre" es Obligatorio!
-                    </div>
                 </div>
                 <div class="form-group col-md-12">
                     <label for="foto_file">Foto</label>
-                    <input type="file" class="form-control-file" id="foto_file" name="foto" @change="preUpload" required>
+                    <input type="file" class="form-control-file" id="foto_file" name="foto" @change="preUpload">
                 </div>
             </div>                      
             <br />

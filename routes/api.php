@@ -41,4 +41,5 @@ Route::group(['middleware' => 'guest:api'], function () {
 
 Route::middleware('api')->group(function () {
     Route::resource('users', 'UsersController');
+    Route::resource('bodegas', 'BodegasController');
 });
