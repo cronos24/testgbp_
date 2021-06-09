@@ -30,7 +30,7 @@ class UsersController extends Controller
     public function store(Request $request)
     {
 
-        $rules=[
+         $rules=[
             'nombre' => 'required',
             'foto' => 'required|mimes:jpg,jpeg,png,pdf|max:2048'
             ];
@@ -95,7 +95,7 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        $users = Users::find($id);
+        $users = User::find($id);
         return response()->json($users);
     }
 
@@ -108,7 +108,7 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $users = Users::find($id);
+        $users = User::find($id);
         $users->update($request->all());
 
         return response()->json($users);
@@ -122,7 +122,7 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        $users = Users::find($id);
+        $users = User::find($id);
         $users->delete();
 
         return response()->json('User deleted!');

@@ -40,10 +40,13 @@
                 <div class="border-dark p-2 br-5 my-2">
                     <div class="row mx-0 justify-conent-center pl-2">
                         <b class="mr-2 my-auto">Usuarios</b>
-                        <i class="mdi mdi-plus-circle f-22 cr-pointer" />
+                        <button type="button" class="btn my-auto btn-sm d-flex" name="newUser" @click="crearUsuario">
+                            <i class="mdi mdi-plus-circle f-22 cr-pointer" />
+                         </button>
                     </div>
                     <div v-for="(data, key) in users" :key="`user-${key}`" class="row mx-0 my-3 px-2">
-                        <el-switch v-model="data.estado" :inactive-text="data.name"> </el-switch>
+                        <span class="switch-container">{{ data.nombre }}</span>
+                        <el-switch :value="data.estado" :inactive-value="0" :active-value="1" @change="cambiarEstado(data, key)"> </el-switch>
                     </div>
                 </div>
                 <!-- Productos -->
@@ -111,6 +114,7 @@
                 <button type="button" class="btn btn-sm btn-primary" name="button">Guardar</button>
             </div>
         </modal>
+        <modal-crear-usuario ref="modalCrearUsuario" v-on:save_user="saveUser"/>
         <!-- https://datatables.net/manual/ -->
         <!-- https://element.eleme.io/#/es -->
     </section>
@@ -121,6 +125,7 @@ export default {
     components: {
         modalAgregarProducto: () => import('./modales/modalAgregarProducto'),
         modalTransferirProducto: () => import('./modales/modalTransferirProducto'),
+        modalCrearUsuario: () => import('./modales/modalCrearUsuario'),
         modal: () => import('~/components/modal')
     },
     data(){return {
@@ -160,6 +165,7 @@ export default {
     methods: {
         cambiarEstadoUsuario(){ this.$refs.cambiarEstado.toggle() },
         agregarProducto(){ this.$refs.modalAgregarProducto.toggle() },
+        crearUsuario(){ this.$refs.modalCrearUsuario.toggle() },
         trasnferirProducto(){ this.$refs.modalTransferirProducto.toggle() },
         initDatatables(){
             let that = this;
@@ -195,6 +201,53 @@ export default {
             })
         },
 
+        saveUser(model) {
+
+            this.$refs.modalCrearUsuario.spinner=true; 
+            this.axios.post('http://localhost:8000/api/users', model)
+            .then(response => {
+
+                console.log(response.data);
+
+                this.$refs.modalCrearUsuario.spinner=false;
+                if (response.data.status=="success") { 
+                        
+                        this.users.push(response.data.response);  
+ 
+                        this.$refs.modalCrearUsuario.model={};
+                        this.$refs.modalCrearUsuario.errors = [];
+
+                        this.crearUsuario();
+
+                    }else{                          
+                        this.$refs.modalCrearUsuario.errors = response.data.response; 
+    
+                    }
+            })
+            .catch(err => {
+                console.error(err);
+            })
+        },
+        cambiarEstado(data, key){
+
+            this.$set(this.users[key], 'estado', ((data.estado == 0)? 1:0));
+  
+            let model=  {
+              estado: data.estado
+            }
+
+            this.axios.put('http://localhost:8000/api/users/'+data.id, model)
+            .then(response => {
+
+                console.log(response.data);
+            })
+            .catch(err => {
+                console.error(err);
+            })
+             
+            
+        },
+
     }
 }
 </script>
@@ -202,5 +255,9 @@ export default {
 <style lang="css" scoped>
 .border-dark{
     border: 1px solid #8a8a8a
+}
+.switch-container{
+    color: #82C7EB;
+    margin-right: 5px;
 }
 </style>

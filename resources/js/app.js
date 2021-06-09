@@ -9,14 +9,14 @@ import '~/plugins'
 import '~/components'
 
 Vue.use(VueAxios, axios);
-
+Vue.component('spinner-component', require('./components/SpinnerComponent.vue').default);
 Vue.config.productionTip = false
 
 
 /* eslint-disable no-new */
 new Vue({
-  i18n,
-  store,
-  router,
-  ...App
+    i18n,
+    store,
+    router,
+    ...App
 })
