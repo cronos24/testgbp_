@@ -127,10 +127,7 @@ export default {
         respBodega: false,
         product: false,
         colorTabla: 0,
-        users: [
-            { name: 'Maria Antonieta', activo: false },
-            { name: 'Arnold Schwarzenegger', activo: false },
-        ],
+        users: [],
         options: [{
             value: 'Option1',
             label: 'Option1'
@@ -158,6 +155,7 @@ export default {
     } },
     mounted(){
         this.initDatatables();
+        this.getAllUsers();
     },
     methods: {
         cambiarEstadoUsuario(){ this.$refs.cambiarEstado.toggle() },
@@ -184,7 +182,19 @@ export default {
                 ],
 
             })
-        } //fin datatable
+        }, //fin datatable
+
+        getAllUsers() {
+            this.axios.get('http://localhost:8000/api/users')
+            .then(res => {
+                console.log(res.data)
+                this.users = res.data
+            })
+            .catch(err => {
+                console.error(err);
+            })
+        },
+
     }
 }
 </script>
